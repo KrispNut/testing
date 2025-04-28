@@ -3,13 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:testing/models/loginmodel.dart';
-
-import '../models/fetchmodel.dart';
+import 'package:testing/models/fetchmodel.dart';
 
 class ApiService {
-  Future<http.Response> fetchData(int branchid, int resourceid) async {
+  Future<http.Response> fetchData(int branchid) async {
     var url = Uri.parse(
-        'https://admin.cherryberryrms.com/v2/api/onlineapp/get_main_data?restaurant_branch_id=$branchid&order_resource_id=$resourceid');
+        'https://admin.cherryberryrms.com/v2/api/onlineapp/get_main_data?restaurant_branch_id=$branchid&order_resource_id=1');
     var response = await http.get(url);
 
     if (response.statusCode == 200 || response.statusCode == 201) {

@@ -4,12 +4,16 @@ class Smallbutton extends StatelessWidget {
   final String? RestaurantName;
   final String? RestaurantAddress;
   final String? PhoneNumber;
+  final String? ClosingTime;
+  final String? Image;
 
   const Smallbutton({
     super.key,
     required this.RestaurantName,
     required this.RestaurantAddress,
     required this.PhoneNumber,
+    required this.ClosingTime,
+    required this.Image,
   });
 
   @override
@@ -33,7 +37,7 @@ class Smallbutton extends StatelessWidget {
             width: 120,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/image_1.png'),
+                image: AssetImage('assets/images/image_2.png'),
                 fit: BoxFit.contain,
               ),
             ),
@@ -78,12 +82,16 @@ class Smallbutton extends StatelessWidget {
           ),
           Flexible(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('\$30.00',
-                      style: TextStyle(fontSize: 20, color: Colors.white)),
+                  Text(
+                    'Closes at $ClosingTime' ?? 'Closing Unknown',
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 15,

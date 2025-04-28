@@ -6,6 +6,7 @@ import 'package:testing/services/api_service.dart';
 import 'package:testing/screens/loginpage.dart';
 import 'package:testing/buttons/smallbutton.dart';
 import 'package:testing/buttons/largebutton.dart';
+import 'package:testing/buttons/dropdown.dart';
 
 class Dashboard extends StatefulWidget {
   Dashboard({super.key});
@@ -15,7 +16,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final Sharedpreference sp = Sharedpreference();
   final ApiService _apiService = ApiService();
 
   final double toolbarOpacity = 2.0;
@@ -34,24 +34,21 @@ class _DashboardState extends State<Dashboard> {
   }
 
   initfetch() async {
-    await _apiService.fetchData(1236, 1).then((onValue) {
+    await _apiService.fetchData(1236).then((onValue) {
       final fetchResponse = FetchModel.fromJson(jsonDecode(onValue.body));
 
       String? restaurantName = fetchResponse.data?.name;
-      print('Restaurant Name: $restaurantName');
-      print(restaurantName);
       String? restaurantAddress = fetchResponse.data?.address;
-      print('Restaurant Address: $restaurantAddress');
       String? logoUrl = fetchResponse.data?.logoUrl;
-      print('Logo Url: $logoUrl');
       String? phoneNumber = fetchResponse.data?.phoneNumber;
-      print('Phone Number: $phoneNumber');
-
+      String? closingTime = fetchResponse.data?.closeTime;
+      if (!mounted) return;
       setState(() {
         _fetchedRestaurantName = restaurantName;
         _fetchedRestaurantAddress = restaurantAddress;
         _fetchedLogoUrl = logoUrl;
         _fetchedphoneNumber = phoneNumber;
+        _closingTime = closingTime;
       });
     });
   }
@@ -60,6 +57,7 @@ class _DashboardState extends State<Dashboard> {
   String? _fetchedRestaurantAddress;
   String? _fetchedLogoUrl;
   String? _fetchedphoneNumber;
+  String? _closingTime;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +65,6 @@ class _DashboardState extends State<Dashboard> {
     final TextEditingController _searchController = TextEditingController();
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -79,39 +76,33 @@ class _DashboardState extends State<Dashboard> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
+              stretch: true,
               pinned: true,
-              floating: true,
-              backgroundColor: Colors.transparent,
-              expandedHeight: 50,
-              actions: <Widget>[
-                IconButton(
-                  icon:
-                      Icon(Icons.logout_rounded, size: 35, color: Colors.white),
-                  onPressed: () async {
-                    bool isRemoved = await sp.removeCache(key: 'token');
-                    if (isRemoved) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => loginpage(),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ],
-              leading: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
-                child: Text(
-                  'Foodie',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontFamily: 'Crude',
-                    fontWeight: FontWeight.w200,
-                    color: Colors.blueGrey.shade700,
+              floating: false,
+              forceMaterialTransparency: true,
+              expandedHeight: 80,
+              flexibleSpace: FlexibleSpaceBar(
+                titlePadding: EdgeInsets.all(0),
+                title: Container(
+                  alignment: Alignment.bottomLeft,
+                  padding: EdgeInsets.only(left: 10),
+                  child: Text(
+                    'Foodie',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontFamily: 'Crude',
+                      fontWeight: FontWeight.w200,
+                      color: Colors.blueGrey.shade700,
+                    ),
                   ),
                 ),
               ),
+              actions: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 18, 10, 0),
+                  child: CustomDropDownMenu(),
+                ),
+              ],
               leadingWidth: 300,
             ),
             SliverList(
@@ -141,6 +132,8 @@ class _DashboardState extends State<Dashboard> {
                             RestaurantName: _fetchedRestaurantName,
                             RestaurantAddress: _fetchedRestaurantAddress,
                             PhoneNumber: _fetchedphoneNumber,
+                            ClosingTime: _closingTime,
+                            Image: _fetchedLogoUrl,
                           ),
                         ),
                         Padding(
@@ -149,6 +142,8 @@ class _DashboardState extends State<Dashboard> {
                             RestaurantName: _fetchedRestaurantName,
                             RestaurantAddress: _fetchedRestaurantAddress,
                             PhoneNumber: _fetchedphoneNumber,
+                            ClosingTime: _closingTime,
+                            Image: _fetchedLogoUrl,
                           ),
                         ),
                       ],
