@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:testing/services/database_service.dart';
 
 class Smallbutton extends StatelessWidget {
-  final String? RestaurantName;
-  final String? RestaurantAddress;
-  final String? PhoneNumber;
-  final String? ClosingTime;
+  final DatabaseService _databaseService = DatabaseService.instance;
+
+  final String? ItemName;
+  final String? ItemDescription;
+  final String? Price;
   final String? Image;
 
-  const Smallbutton({
+  Smallbutton({
     super.key,
-    required this.RestaurantName,
-    required this.RestaurantAddress,
-    required this.PhoneNumber,
-    required this.ClosingTime,
+    required this.ItemName,
+    required this.ItemDescription,
+    required this.Price,
     required this.Image,
   });
 
@@ -22,11 +23,7 @@ class Smallbutton extends StatelessWidget {
       height: 200,
       width: 170,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.grey, Colors.blueGrey.shade500],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Column(
@@ -37,7 +34,7 @@ class Smallbutton extends StatelessWidget {
             width: 120,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/images/image_2.png'),
+                image: NetworkImage(Image! ?? ' Image not Found'),
                 fit: BoxFit.contain,
               ),
             ),
@@ -48,31 +45,21 @@ class Smallbutton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  RestaurantName ?? "Unknown Restaurant",
+                  ItemName ?? "Unknown Restaurant",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  RestaurantAddress ?? "Unknown Address",
+                  ItemDescription ?? "Unknown Address",
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w200,
-                    color: Colors.white,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  PhoneNumber ?? "Unknown Number",
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w200,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -87,16 +74,20 @@ class Smallbutton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Closes at $ClosingTime' ?? 'Closing Unknown',
-                    style: TextStyle(fontSize: 15, color: Colors.white),
+                    'Rs. $Price' ?? 'Price Unknown',
+                    style: TextStyle(fontSize: 15, color: Colors.black),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   CircleAvatar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.grey,
                     radius: 15,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        double ammount = double.parse(Price!);
+                        if (ItemName == null || ItemName == "") return;
+                        _databaseService.addTask(ItemName!, ammount);
+                      },
                       child: Icon(
                         Icons.add,
                         size: 16,

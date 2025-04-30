@@ -1,0 +1,15 @@
+[33m5d9b3ad[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33m3a1a594[m HEAD@{1}: reset: moving to HEAD~1
+[33m7ffa1ec[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{2}: commit: added listview.builder along with dynamic data
+[33m3a1a594[m HEAD@{3}: reset: moving to HEAD~1
+[33me25567f[m HEAD@{4}: rebase (finish): returning to refs/heads/master
+[33me25567f[m HEAD@{5}: rebase (pick): added listview.builder along with dynamic data
+[33m3a1a594[m HEAD@{6}: rebase (start): checkout HEAD~3
+[33m693eb7a[m HEAD@{7}: commit: added listview.builder along with dynamic data
+[33m71cac1f[m HEAD@{8}: reset: moving to 71cac1f
+[33m3a1a594[m HEAD@{9}: reset: moving to 3a1a5947a41644fa2b75074d880620012682ad52
+[33m71cac1f[m HEAD@{10}: commit: Added ListView.builder with dynamic data
+[33m3cb0608[m HEAD@{11}: commit: Added ListView.builder
+[33m3a1a594[m HEAD@{12}: commit: Some Changes
+[33m5d9b3ad[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{13}: pull origin master --allow-unrelated-histories: Merge made by the 'ort' strategy.
+[33mef24424[m HEAD@{14}: commit (initial): Initial commit

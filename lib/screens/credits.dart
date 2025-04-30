@@ -16,10 +16,11 @@ class CreditsPage extends StatelessWidget {
             Text(
               'Credits',
               style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Sequel',
-                  color: Colors.black54),
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Sequel',
+                color: Colors.black54,
+              ),
             ),
             ElevatedButton(
               onPressed: () {

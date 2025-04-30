@@ -18,7 +18,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final ApiService _apiService = ApiService();
 
-  final double toolbarOpacity = 2.0;
+  final double toolbarOpacity = 6.0;
   int current_index = 0;
 
   void onTap(int index) {
@@ -27,30 +27,69 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  FetchModel? _restaurantData;
+  List<Map<String, String>> _wrapList = [];
+  List<Map<String, String>> _burgerList = [];
+  List<Map<String, String>> _recommendedList = [];
+
+  List<String> smallCardImagePaths = [
+    'assets/images/pizza.png',
+    'assets/images/chinese.png',
+    'assets/images/kfc.png',
+  ];
+  List<String> largeCardImagePaths = [
+    'assets/images/sushi.png',
+    'assets/images/korean_bbq.png',
+    'assets/images/brim.png',
+  ];
+
   @override
   void initState() {
-    initfetch();
+    initfetch(1317);
     super.initState();
   }
 
-  initfetch() async {
-    await _apiService.fetchData(1236).then((onValue) {
-      final fetchResponse = FetchModel.fromJson(jsonDecode(onValue.body));
+  Future<void> initfetch(int branchId) async {
+    try {
+      final response = await _apiService.fetchData(branchId);
+      if (response.statusCode == 200) {
+        final fetchResponse = FetchModel.fromJson(jsonDecode(response.body));
+        setState(() {
+          _restaurantData = fetchResponse;
+          _fetchedRestaurantName = fetchResponse.data?.name;
+          _fetchedRestaurantAddress = fetchResponse.data?.address;
+          _fetchedLogoUrl = fetchResponse.data?.logoUrl;
+          _fetchedphoneNumber = fetchResponse.data?.phoneNumber;
+          _closingTime = fetchResponse.data?.closeTime;
+          _burgerList = _getItemsByCategory("Deals");
+          _wrapList = _getItemsByCategory("Fried Chicken");
+          _recommendedList = _getItemsByCategory("Burgers");
+        });
+      } else {
+        print('Failed to fetch data. Status Code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error fetching data: $error');
+    }
+  }
 
-      String? restaurantName = fetchResponse.data?.name;
-      String? restaurantAddress = fetchResponse.data?.address;
-      String? logoUrl = fetchResponse.data?.logoUrl;
-      String? phoneNumber = fetchResponse.data?.phoneNumber;
-      String? closingTime = fetchResponse.data?.closeTime;
-      if (!mounted) return;
-      setState(() {
-        _fetchedRestaurantName = restaurantName;
-        _fetchedRestaurantAddress = restaurantAddress;
-        _fetchedLogoUrl = logoUrl;
-        _fetchedphoneNumber = phoneNumber;
-        _closingTime = closingTime;
-      });
-    });
+  List<Map<String, String>> _getItemsByCategory(String categoryName) {
+    List<Map<String, String>> items = [];
+    if (_restaurantData?.data?.restaurantBranchMenu != null) {
+      for (var category in _restaurantData!.data!.restaurantBranchMenu) {
+        if (category.name == categoryName && category.menu.isNotEmpty) {
+          for (var menuItem in category.menu) {
+            items.add({
+              'name': menuItem.name ?? 'N/A',
+              'price': menuItem.price ?? 'N/A',
+              'description': menuItem.description ?? '',
+              'image_url': menuItem.imageUrl ?? '',
+            });
+          }
+        }
+      }
+    }
+    return items;
   }
 
   String? _fetchedRestaurantName;
@@ -59,11 +98,56 @@ class _DashboardState extends State<Dashboard> {
   String? _fetchedphoneNumber;
   String? _closingTime;
 
+  Widget _buildItemList({
+    required List<Map<String, String>> itemList,
+    required List<String> imagePathList,
+    required bool isLarge,
+  }) {
+    return SizedBox(
+      height: isLarge ? 250 : 220,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: itemList.length,
+        itemBuilder: (context, index) {
+          final item = itemList[index];
+          final imageIndex = index % imagePathList.length;
+          final imagePath = imagePathList[imageIndex];
+
+          if (imagePath == null) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: isLarge ? 170 : 150,
+                height: isLarge ? 200 : 180,
+                color: Colors.grey.shade300,
+                child: Center(child: Text('Image not found')),
+              ),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+            child: isLarge
+                ? Largebutton(
+                    DealName: item['name']!,
+                    ItemDescription: item['description']!,
+                    Price: item['price'],
+                    Image: item['image_url'],
+                  )
+                : Smallbutton(
+                    ItemName: item['name']!,
+                    ItemDescription: item['description']!,
+                    Price: item['price'],
+                    Image: item['image_url'],
+                  ),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    final TextEditingController _searchController = TextEditingController();
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -80,6 +164,7 @@ class _DashboardState extends State<Dashboard> {
               pinned: true,
               floating: false,
               forceMaterialTransparency: true,
+              backgroundColor: Colors.black,
               expandedHeight: 80,
               flexibleSpace: FlexibleSpaceBar(
                 titlePadding: EdgeInsets.all(0),
@@ -109,7 +194,11 @@ class _DashboardState extends State<Dashboard> {
               delegate: SliverChildListDelegate(
                 [
                   const SizedBox(height: 30),
-                  Largebutton(),
+                  _buildItemList(
+                    itemList: _burgerList,
+                    imagePathList: largeCardImagePaths,
+                    isLarge: true,
+                  ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                     child: Text(
@@ -122,31 +211,11 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Smallbutton(
-                            RestaurantName: _fetchedRestaurantName,
-                            RestaurantAddress: _fetchedRestaurantAddress,
-                            PhoneNumber: _fetchedphoneNumber,
-                            ClosingTime: _closingTime,
-                            Image: _fetchedLogoUrl,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Smallbutton(
-                            RestaurantName: _fetchedRestaurantName,
-                            RestaurantAddress: _fetchedRestaurantAddress,
-                            PhoneNumber: _fetchedphoneNumber,
-                            ClosingTime: _closingTime,
-                            Image: _fetchedLogoUrl,
-                          ),
-                        ),
-                      ],
+                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: _buildItemList(
+                      itemList: _wrapList,
+                      imagePathList: smallCardImagePaths,
+                      isLarge: false,
                     ),
                   ),
                   Padding(
@@ -160,7 +229,11 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.grey),
                     ),
                   ),
-                  Largebutton(),
+                  _buildItemList(
+                    itemList: _recommendedList,
+                    imagePathList: largeCardImagePaths,
+                    isLarge: true,
+                  ),
                 ],
               ),
             ),

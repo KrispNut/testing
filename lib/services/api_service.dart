@@ -23,20 +23,18 @@ class ApiService {
   }
 
   Future<http.Response> LoginCheck(
-      String emailController,
-      String passwordController,
-      int restaurantIdController,
-      int orderResourceIdController,
-      String deviceIdController) async {
+    String emailController,
+    String passwordController,
+  ) async {
     var url =
         Uri.parse('https://admin.cherryberryrms.com/v2/api/onlineapp/login');
 
     String responseBody = json.encode({
       "email": emailController,
       "password": passwordController,
-      "restaurant_id": restaurantIdController,
-      "order_resource_id": orderResourceIdController,
-      "device_id": deviceIdController,
+      "restaurant_id": 1236,
+      "order_resource_id": 3,
+      "device_id": 123,
     });
 
     var response = await http.post(url,

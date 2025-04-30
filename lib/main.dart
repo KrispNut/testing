@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:testing/screens/loginpage.dart';
 import 'package:testing/screens/splash.dart';
+import 'package:testing/services/database_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await DatabaseService.instance.deleteDatabaseFile();
   runApp(const MyApp());
 }
 

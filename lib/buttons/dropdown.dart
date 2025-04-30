@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:testing/screens/cart.dart';
 import 'package:testing/screens/loginpage.dart';
 import 'package:testing/screens/dashboard.dart';
 import 'package:testing/screens/credits.dart';
@@ -40,11 +41,11 @@ class _CustomDropdownMenuState extends State<CustomDropDownMenu> {
         onChanged: (value) async {
           MenuItem selectedItem = value as MenuItem;
           switch (selectedItem) {
-            case MenuItems.credits:
+            case MenuItems.cart:
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CreditsPage(),
+                  builder: (context) => ShoppingCart(),
                 ),
               );
               break;
@@ -91,11 +92,10 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  static const List<MenuItem> firstItems = [credits];
+  static const List<MenuItem> firstItems = [cart];
   static const List<MenuItem> secondItems = [logout];
 
-  static const credits =
-      MenuItem(text: 'Credits', icon: Icons.description_outlined);
+  static const cart = MenuItem(text: 'Cart', icon: Icons.description_outlined);
   static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
   static Widget buildItem(MenuItem item) {

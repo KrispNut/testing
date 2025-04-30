@@ -86,7 +86,7 @@ class Data {
   final int? isTakeaway;
   final bool? taxInclude;
   final String? taxPercent;
-  final dynamic logo;
+  final String? logo;
   final String? logoUrl;
   final String? latitude;
   final String? longitude;
@@ -99,8 +99,8 @@ class Data {
   final dynamic phoneNumber2;
   final dynamic phoneNumber3;
   final String? contactEmail;
-  final String? deliveryFee;
-  final String? serviceFee;
+  final int? deliveryFee;
+  final int? serviceFee;
   final int? onlineDiscountPercent;
   final String? currency;
   final String? openTime;
@@ -114,8 +114,8 @@ class Data {
   final String? linkedinProfileUrl;
   final String? androidAppUrl;
   final String? iosAppUrl;
-  final List<dynamic> restaurantBranchMenu;
-  final List<dynamic> banners;
+  final List<RestaurantBranchMenu> restaurantBranchMenu;
+  final List<Banner> banners;
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
@@ -159,10 +159,11 @@ class Data {
       iosAppUrl: json["ios_app_url"],
       restaurantBranchMenu: json["restaurant_branch_menu"] == null
           ? []
-          : List<dynamic>.from(json["restaurant_branch_menu"]!.map((x) => x)),
+          : List<RestaurantBranchMenu>.from(json["restaurant_branch_menu"]!
+              .map((x) => RestaurantBranchMenu.fromJson(x))),
       banners: json["banners"] == null
           ? []
-          : List<dynamic>.from(json["banners"]!.map((x) => x)),
+          : List<Banner>.from(json["banners"]!.map((x) => Banner.fromJson(x))),
     );
   }
 
@@ -205,7 +206,202 @@ class Data {
         "linkedin_profile_url": linkedinProfileUrl,
         "android_app_url": androidAppUrl,
         "ios_app_url": iosAppUrl,
-        "restaurant_branch_menu": restaurantBranchMenu.map((x) => x).toList(),
-        "banners": banners.map((x) => x).toList(),
+        "restaurant_branch_menu":
+            restaurantBranchMenu.map((x) => x?.toJson()).toList(),
+        "banners": banners.map((x) => x?.toJson()).toList(),
+      };
+}
+
+class Banner {
+  Banner({
+    required this.id,
+    required this.name,
+    required this.image,
+    required this.imageUrl,
+  });
+
+  final int? id;
+  final String? name;
+  final String? image;
+  final String? imageUrl;
+
+  factory Banner.fromJson(Map<String, dynamic> json) {
+    return Banner(
+      id: json["id"],
+      name: json["name"],
+      image: json["image"],
+      imageUrl: json["image_url"],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "image": image,
+        "image_url": imageUrl,
+      };
+}
+
+class RestaurantBranchMenu {
+  RestaurantBranchMenu({
+    required this.menuCategoryId,
+    required this.name,
+    required this.image,
+    required this.imageUrl,
+    required this.menu,
+  });
+
+  final String? menuCategoryId;
+  final String? name;
+  final String? image;
+  final String? imageUrl;
+  final List<Menu> menu;
+
+  factory RestaurantBranchMenu.fromJson(Map<String, dynamic> json) {
+    return RestaurantBranchMenu(
+      menuCategoryId: json["menu_category_id"],
+      name: json["name"],
+      image: json["image"],
+      imageUrl: json["image_url"],
+      menu: json["menu"] == null
+          ? []
+          : List<Menu>.from(json["menu"]!.map((x) => Menu.fromJson(x))),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "menu_category_id": menuCategoryId,
+        "name": name,
+        "image": image,
+        "image_url": imageUrl,
+        "menu": menu.map((x) => x?.toJson()).toList(),
+      };
+}
+
+class Menu {
+  Menu({
+    required this.id,
+    required this.menuId,
+    required this.name,
+    required this.price,
+    required this.takeAwayPrice,
+    required this.deliveryPrice,
+    required this.image,
+    required this.imageUrl,
+    required this.description,
+    required this.ingridient,
+    required this.isDeal,
+    required this.menuVariations,
+    required this.choiceGroup,
+    required this.dealMenuDetails,
+    required this.quantity,
+    required this.menuVariation,
+  });
+
+  final int? id;
+  final String? menuId;
+  final String? name;
+  final String? price;
+  final String? takeAwayPrice;
+  final String? deliveryPrice;
+  final String? image;
+  final String? imageUrl;
+  final String? description;
+  final dynamic ingridient;
+  final bool? isDeal;
+  final List<MenuVariation> menuVariations;
+  final List<dynamic> choiceGroup;
+  final List<Menu> dealMenuDetails;
+  final int? quantity;
+  final MenuVariation? menuVariation;
+
+  factory Menu.fromJson(Map<String, dynamic> json) {
+    return Menu(
+      id: json["id"],
+      menuId: json["menu_id"],
+      name: json["name"],
+      price: json["price"],
+      takeAwayPrice: json["take_away_price"],
+      deliveryPrice: json["delivery_price"],
+      image: json["image"],
+      imageUrl: json["image_url"],
+      description: json["description"],
+      ingridient: json["ingridient"],
+      isDeal: json["is_deal"],
+      menuVariations: json["menu_variations"] == null
+          ? []
+          : List<MenuVariation>.from(
+              json["menu_variations"]!.map((x) => MenuVariation.fromJson(x))),
+      choiceGroup: json["choice_group"] == null
+          ? []
+          : List<dynamic>.from(json["choice_group"]!.map((x) => x)),
+      dealMenuDetails: json["deal_menu_details"] == null
+          ? []
+          : List<Menu>.from(
+              json["deal_menu_details"]!.map((x) => Menu.fromJson(x))),
+      quantity: json["quantity"],
+      menuVariation: json["menu_variation"] == null
+          ? null
+          : MenuVariation.fromJson(json["menu_variation"]),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "menu_id": menuId,
+        "name": name,
+        "price": price,
+        "take_away_price": takeAwayPrice,
+        "delivery_price": deliveryPrice,
+        "image": image,
+        "image_url": imageUrl,
+        "description": description,
+        "ingridient": ingridient,
+        "is_deal": isDeal,
+        "menu_variations": menuVariations.map((x) => x?.toJson()).toList(),
+        "choice_group": choiceGroup.map((x) => x).toList(),
+        "deal_menu_details": dealMenuDetails.map((x) => x?.toJson()).toList(),
+        "quantity": quantity,
+        "menu_variation": menuVariation?.toJson(),
+      };
+}
+
+class MenuVariation {
+  MenuVariation({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.takeAwayPrice,
+    required this.deliveryPrice,
+    required this.choiceGroups,
+  });
+
+  final int? id;
+  final String? name;
+  final String? price;
+  final String? takeAwayPrice;
+  final String? deliveryPrice;
+  final List<dynamic> choiceGroups;
+
+  factory MenuVariation.fromJson(Map<String, dynamic> json) {
+    return MenuVariation(
+      id: json["id"],
+      name: json["name"],
+      price: json["price"],
+      takeAwayPrice: json["take_away_price"],
+      deliveryPrice: json["delivery_price"],
+      choiceGroups: json["choice_groups"] == null
+          ? []
+          : List<dynamic>.from(json["choice_groups"]!.map((x) => x)),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "price": price,
+        "take_away_price": takeAwayPrice,
+        "delivery_price": deliveryPrice,
+        "choice_groups": choiceGroups.map((x) => x).toList(),
       };
 }

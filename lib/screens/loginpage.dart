@@ -19,9 +19,6 @@ class _loginpageState extends State<loginpage> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController restaurant_id_Controller = TextEditingController();
-  TextEditingController order_resource_id_Controller = TextEditingController();
-  TextEditingController device_id_Controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -119,99 +116,6 @@ class _loginpageState extends State<loginpage> {
                 SizedBox(
                   height: 40,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: restaurant_id_Controller,
-                    textCapitalization: TextCapitalization.sentences,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: "Restaurant Id...",
-                      hintStyle: TextStyle(color: Colors.white70),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      contentPadding: EdgeInsets.all(12),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 1.0,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: order_resource_id_Controller,
-                    textCapitalization: TextCapitalization.sentences,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: "Order Resource...",
-                      hintStyle: TextStyle(color: Colors.white70),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      contentPadding: EdgeInsets.all(12),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 1.0,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: device_id_Controller,
-                    textCapitalization: TextCapitalization.sentences,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: "Device Id...",
-                      hintStyle: TextStyle(color: Colors.white70),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      contentPadding: EdgeInsets.all(12),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 1.0,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.resolveWith<Color>(
@@ -229,12 +133,9 @@ class _loginpageState extends State<loginpage> {
                   ),
                   onPressed: () async {
                     await _apiService.LoginCheck(
-                            emailController.text,
-                            passwordController.text,
-                            int.parse(restaurant_id_Controller.text),
-                            int.parse(order_resource_id_Controller.text),
-                            device_id_Controller.text)
-                        .then((onValue) {
+                      emailController.text,
+                      passwordController.text,
+                    ).then((onValue) {
                       final loginResponse =
                           LoginModel.fromJson(jsonDecode(onValue.body));
 
