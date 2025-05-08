@@ -1,0 +1,58 @@
+{
+  "userName": "Zampa",
+  "@userName": {
+    "description": "User's name"
+  },
+  "userEmail": "zampa@gmail.com",
+  "@userEmail": {
+    "description": "User's email"
+  },
+  "language": "Français",
+  "@language": {
+    "description": "The current language"
+  },
+  "profile": "Profil",
+  "@profile": {
+    "description": "Profile title"
+  },
+  "cart": "Panier",
+  "@cart": {
+    "description": "Shopping cart"
+  },
+  "appTitle": "Falafels",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "categoryName_1": "Offres recommandées",
+  "@categoryName_1": {
+    "description": "Category name"
+  },
+  "categoryName_2": "Vos sélections de confiance",
+  "@categoryName_2": {
+    "description": "Category name"
+  },
+  "categoryName_3": "Des hamburgers",
+  "@categoryName_3": {
+    "description": "Category name"
+  },
+  "categoryName_4": "Frizone",
+  "@categoryName_4": {
+    "description": "Category name"
+  },
+  "categoryName_5": "Poulet frit",
+  "@categoryName_5": {
+    "description": "Category name"
+  },
+  "categoryName_6": "Sandwichs",
+  "@categoryName_6": {
+    "description": "Category name"
+  },
+  "categoryName_7": "Spécialités",
+  "@categoryName_7": {
+    "description": "Category name"
+  },
+  "categoryName_8": "Plateaux",
+  "@categoryName_8": {
+    "description": "Category name"
+  }
+}

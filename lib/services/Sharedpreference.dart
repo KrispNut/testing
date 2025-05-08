@@ -6,7 +6,7 @@ class Sharedpreference {
     final SharedPreferences pref = await SharedPreferences.getInstance();
 
     bool isSaved = await pref.setString(key, value);
-    // debugPrint(isSaved.toString());
+    debugPrint(isSaved.toString());
   }
 
   Future<String?> readCache({required String key}) async {
@@ -21,8 +21,6 @@ class Sharedpreference {
 
   Future<bool> removeCache({required String key}) async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-
-    bool isCleared = await pref.clear();
-    return isCleared;
+    return await pref.remove(key);
   }
 }

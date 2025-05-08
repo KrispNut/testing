@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:testing/screens/loginpage.dart';
+import 'package:testing/l10n/l10n.dart';
 import 'package:testing/screens/splash.dart';
-import 'package:testing/services/database_service.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:testing/services/Sharedpreference.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await DatabaseService.instance.deleteDatabaseFile();
-  runApp(const MyApp());
+  Sharedpreference sp = Sharedpreference();
+  String? language = await sp.readCache(key: 'language');
+  if (language == null) {
+    sp.writeCache(key: 'language', value: 'en');
+    print('language added as it was empty');
+  }
+  runApp(MyApp(language));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String? language;
+
+  const MyApp(this.language, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +30,14 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
+      supportedLocales: L10n.all,
+      locale: Locale(language ?? 'en'),
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
       home: SplashScreen(),
     );
   }

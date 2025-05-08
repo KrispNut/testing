@@ -1,0 +1,58 @@
+{
+  "userName": "زامپا",
+  "@userName": {
+    "description": "User's name"
+  },
+  "userEmail": "zampa@gmail.com",
+  "@userEmail": {
+    "description": "User's email"
+  },
+  "language": "اردو",
+  "@language": {
+    "description": "The current language"
+  },
+  "profile": "پروفائل",
+  "@profile": {
+    "description": "Profile title"
+  },
+  "cart": "ٹوکری",
+  "@cart": {
+    "description": "Shopping cart"
+  },
+  "appTitle": "فالفیل",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "categoryName_1": "تجویز کردہ سودے",
+  "@categoryName_1": {
+    "description": "Category name"
+  },
+  "categoryName_2": "آپ کے معتبر انتخاب",
+  "@categoryName_2": {
+    "description": "Category name"
+  },
+  "categoryName_3": "برگر",
+  "@categoryName_3": {
+    "description": "Category name"
+  },
+  "categoryName_4": "فریزون",
+  "@categoryName_4": {
+    "description": "Category name"
+  },
+  "categoryName_5": "فرائیڈ چکن",
+  "@categoryName_5": {
+    "description": "Category name"
+  },
+  "categoryName_6": "سینڈوچ",
+  "@categoryName_6": {
+    "description": "Category name"
+  },
+  "categoryName_7": "خصوصیات",
+  "@categoryName_7": {
+    "description": "Category name"
+  },
+  "categoryName_8": "پلیٹر",
+  "@categoryName_8": {
+    "description": "Category name"
+  }
+}

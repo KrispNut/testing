@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:testing/screens/dashboard.dart';
 import 'package:testing/services/api_service.dart';
 import 'package:testing/services/Sharedpreference.dart';
 import 'package:testing/models/loginmodel.dart';
+import 'navigationpage.dart'; // Corrected import path
 
 class loginpage extends StatefulWidget {
   const loginpage({super.key});
@@ -15,23 +14,23 @@ class loginpage extends StatefulWidget {
 
 class _loginpageState extends State<loginpage> {
   final ApiService _apiService = ApiService();
-  Sharedpreference sp = Sharedpreference();
+  final Sharedpreference sp = Sharedpreference();
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false; // Track loading state
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color(0xFFF5F5DC),
           image: DecorationImage(
             alignment: Alignment.topCenter,
-            matchTextDirection: true,
             fit: BoxFit.cover,
-            image: AssetImage("assets/images/wavy_pattern.jpg"),
+            image: AssetImage("assets/images/background_image.jpg"),
           ),
         ),
         child: SafeArea(
@@ -40,8 +39,8 @@ class _loginpageState extends State<loginpage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 40),
-                Text(
+                const SizedBox(height: 40),
+                const Text(
                   'Login',
                   style: TextStyle(
                       fontSize: 40,
@@ -49,31 +48,32 @@ class _loginpageState extends State<loginpage> {
                       fontWeight: FontWeight.w600,
                       color: Colors.white70),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
                     textCapitalization: TextCapitalization.sentences,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: "email...",
-                      hintStyle: TextStyle(color: Colors.white70),
+                      hintStyle: const TextStyle(color: Colors.white70),
                       filled: true,
                       fillColor: Colors.transparent,
-                      contentPadding: EdgeInsets.all(12),
+                      contentPadding: const EdgeInsets.all(12),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.white,
                           width: 1.0,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.white,
                           width: 2.0,
                         ),
@@ -81,31 +81,32 @@ class _loginpageState extends State<loginpage> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     controller: passwordController,
+                    obscureText: true,
                     textCapitalization: TextCapitalization.sentences,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: "password...",
-                      hintStyle: TextStyle(color: Colors.white70),
+                      hintStyle: const TextStyle(color: Colors.white70),
                       filled: true,
                       fillColor: Colors.transparent,
-                      contentPadding: EdgeInsets.all(12),
+                      contentPadding: const EdgeInsets.all(12),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.white,
                           width: 1.0,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
+                        borderSide: const BorderSide(
                           color: Colors.white,
                           width: 2.0,
                         ),
@@ -113,17 +114,17 @@ class _loginpageState extends State<loginpage> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                        (Set<WidgetState> states) {
+                    backgroundColor:
+                        WidgetStateProperty.resolveWith<Color>((states) {
                       if (states.contains(WidgetState.pressed)) {
-                        return Color(0xFFffb433);
+                        return const Color(0xFFffb433);
                       }
-                      return Color(0xFFfef0ac);
+                      return const Color(0xFFfef0ac);
                     }),
                     shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
@@ -132,30 +133,63 @@ class _loginpageState extends State<loginpage> {
                     ),
                   ),
                   onPressed: () async {
-                    await _apiService.LoginCheck(
-                      emailController.text,
-                      passwordController.text,
-                    ).then((onValue) {
-                      final loginResponse =
-                          LoginModel.fromJson(jsonDecode(onValue.body));
+                    if (_isLoading) return;
+                    setState(() {
+                      _isLoading = true;
+                    });
 
-                      String? token = loginResponse.data?.token;
-                      sp.writeCache(key: 'token', value: '$token');
-                      // print('Token: $token');
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) {
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                    );
+
+                    try {
+                      final response = await _apiService.LoginCheck(
+                        emailController.text,
+                        passwordController.text,
+                      );
+
+                      final loginResponse =
+                          LoginModel.fromJson(jsonDecode(response.body));
+
                       if (loginResponse.status == 200) {
+                        String? token = loginResponse.data?.token;
+                        if (token != null) {
+                          await sp.writeCache(key: 'token', value: token);
+                        }
+
+                        Navigator.of(context).pop();
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Dashboard(),
+                            builder: (context) => Navigationpage(),
                           ),
                         );
                       } else {
+                        Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                              content: Text("Login failed. Please try again.")),
+                            content: Text("Login failed. Please try again."),
+                          ),
                         );
                       }
-                    });
+                    } catch (e) {
+                      Navigator.of(context).pop();
+                      String errorMessage = "Error Occurred: ${e}";
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(errorMessage)),
+                      );
+                    } finally {
+                      if (mounted) {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                    }
                   },
                   child: Text(
                     'Login',

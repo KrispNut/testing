@@ -1,0 +1,58 @@
+{
+  "userName": "Zampa",
+  "@userName": {
+    "description": "User's name"
+  },
+  "userEmail": "zampa@gmail.com",
+  "@userEmail": {
+    "description": "User's email"
+  },
+  "language": "Español",
+  "@language": {
+    "description": "The current language"
+  },
+  "profile": "Perfil",
+  "@profile": {
+    "description": "Profile title"
+  },
+  "cart": "Carrito",
+  "@cart": {
+    "description": "Shopping cart"
+  },
+  "appTitle": "Falafel",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "categoryName_1": "Ofertas recomendadas",
+  "@categoryName_1": {
+    "description": "Category name"
+  },
+  "categoryName_2": "Tus selecciones confiables",
+  "@categoryName_2": {
+    "description": "Category name"
+  },
+  "categoryName_3": "Hamburguesas",
+  "@categoryName_3": {
+    "description": "Category name"
+  },
+  "categoryName_4": "frizona",
+  "@categoryName_4": {
+    "description": "Category name"
+  },
+  "categoryName_5": "Pollo frito",
+  "@categoryName_5": {
+    "description": "Category name"
+  },
+  "categoryName_6": "Sándwiches",
+  "@categoryName_6": {
+    "description": "Category name"
+  },
+  "categoryName_7": "Especialidades",
+  "@categoryName_7": {
+    "description": "Category name"
+  },
+  "categoryName_8": "Bandejas",
+  "@categoryName_8": {
+    "description": "Category name"
+  }
+}

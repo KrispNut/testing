@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testing/screens/dashboard.dart';
 import 'package:testing/screens/loginpage.dart';
 import 'package:testing/services/Sharedpreference.dart';
+
+import '../models/fetchmodel.dart';
+import '../services/api_service.dart';
+import 'navigationpage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -26,15 +31,20 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
+  final ApiService _apiService = ApiService();
+
   initSplash() async {
-    await Future.delayed(Duration(seconds: 1));
     Sharedpreference sp = Sharedpreference();
+    final response = await _apiService.fetchData(1317);
+
+    sp.writeCache(key: 'response', value: response.body);
+    await Future.delayed(Duration(seconds: 1));
     String? value = await sp.readCache(key: 'token');
 
     if (value != null) {
       Navigator.pushReplacement(
         context,
-        _createRoute(Dashboard()),
+        _createRoute(Navigationpage()),
       );
     } else {
       Navigator.pushReplacement(

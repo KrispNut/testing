@@ -79,20 +79,17 @@ class Smallbutton extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  CircleAvatar(
-                    backgroundColor: Colors.grey,
-                    radius: 15,
-                    child: GestureDetector(
-                      onTap: () {
-                        double ammount = double.parse(Price!);
-                        if (ItemName == null || ItemName == "") return;
-                        _databaseService.addTask(ItemName!, ammount);
-                      },
-                      child: Icon(
-                        Icons.add,
-                        size: 16,
-                        color: Colors.black,
-                      ),
+                  IconButton(
+                    onPressed: () {
+                      double price = double.parse(Price!);
+                      if (ItemName == null || ItemName == "") return;
+                      _databaseService.addItems(ItemName!, price, 1);
+                    },
+                    highlightColor: Colors.orangeAccent,
+                    icon: Icon(
+                      Icons.add,
+                      size: 16,
+                      color: Colors.black,
                     ),
                   ),
                 ],

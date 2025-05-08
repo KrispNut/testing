@@ -1,0 +1,58 @@
+{
+  "userName": "زامبا",
+  "@userName": {
+    "description": "User's name"
+  },
+  "userEmail": "zampa@gmail.com",
+  "@userEmail": {
+    "description": "User's email"
+  },
+  "language": "عربي",
+  "@language": {
+    "description": "The current language"
+  },
+  "profile": "الملف الشخصي",
+  "@profile": {
+    "description": "Profile title"
+  },
+  "cart": "عربة التسوق",
+  "@cart": {
+    "description": "Shopping cart"
+  },
+  "appTitle": "فلافل",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "categoryName_1": "عروض موصى بها",
+  "@categoryName_1": {
+    "description": "Category name"
+  },
+  "categoryName_2": "اختياراتك الموثوقة",
+  "@categoryName_2": {
+    "description": "Category name"
+  },
+  "categoryName_3": "برغر",
+  "@categoryName_3": {
+    "description": "Category name"
+  },
+  "categoryName_4": "فريزون",
+  "@categoryName_4": {
+    "description": "Category name"
+  },
+  "categoryName_5": "دجاج مقلي",
+  "@categoryName_5": {
+    "description": "Category name"
+  },
+  "categoryName_6": "ساندويشات",
+  "@categoryName_6": {
+    "description": "Category name"
+  },
+  "categoryName_7": "تخصصات",
+  "@categoryName_7": {
+    "description": "Category name"
+  },
+  "categoryName_8": "أطباق",
+  "@categoryName_8": {
+    "description": "Category name"
+  }
+}

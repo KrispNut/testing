@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:testing/models/fetchmodel.dart';
-import 'package:testing/services/Sharedpreference.dart';
 import 'package:testing/services/api_service.dart';
-import 'package:testing/screens/loginpage.dart';
 import 'package:testing/buttons/smallbutton.dart';
 import 'package:testing/buttons/largebutton.dart';
-import 'package:testing/buttons/dropdown.dart';
+import 'package:testing/screens/loginpage.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:testing/services/Sharedpreference.dart';
 
 class Dashboard extends StatefulWidget {
   Dashboard({super.key});
@@ -19,29 +20,16 @@ class _DashboardState extends State<Dashboard> {
   final ApiService _apiService = ApiService();
 
   final double toolbarOpacity = 6.0;
-  int current_index = 0;
-
-  void onTap(int index) {
-    setState(() {
-      current_index = index;
-    });
-  }
 
   FetchModel? _restaurantData;
   List<Map<String, String>> _wrapList = [];
   List<Map<String, String>> _burgerList = [];
   List<Map<String, String>> _recommendedList = [];
-
-  List<String> smallCardImagePaths = [
-    'assets/images/pizza.png',
-    'assets/images/chinese.png',
-    'assets/images/kfc.png',
-  ];
-  List<String> largeCardImagePaths = [
-    'assets/images/sushi.png',
-    'assets/images/korean_bbq.png',
-    'assets/images/brim.png',
-  ];
+  List<Map<String, String>> _friezoneList = [];
+  List<Map<String, String>> _friedChickenList = [];
+  List<Map<String, String>> _sandwichesList = [];
+  List<Map<String, String>> _specialitiesList = [];
+  List<Map<String, String>> _plattersList = [];
 
   @override
   void initState() {
@@ -51,9 +39,10 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> initfetch(int branchId) async {
     try {
-      final response = await _apiService.fetchData(branchId);
-      if (response.statusCode == 200) {
-        final fetchResponse = FetchModel.fromJson(jsonDecode(response.body));
+      Sharedpreference sp = Sharedpreference();
+      final response = await sp.readCache(key: 'response');
+      if (mounted && response != null) {
+        final fetchResponse = FetchModel.fromJson(jsonDecode(response));
         setState(() {
           _restaurantData = fetchResponse;
           _fetchedRestaurantName = fetchResponse.data?.name;
@@ -64,9 +53,15 @@ class _DashboardState extends State<Dashboard> {
           _burgerList = _getItemsByCategory("Deals");
           _wrapList = _getItemsByCategory("Fried Chicken");
           _recommendedList = _getItemsByCategory("Burgers");
+          _friezoneList = _getItemsByCategory("Friezone");
+
+          _friedChickenList = _getItemsByCategory("Fried Chicken");
+          _sandwichesList = _getItemsByCategory("Sandwiches");
+          _specialitiesList = _getItemsByCategory("Specialities");
+          _plattersList = _getItemsByCategory("Platters");
         });
       } else {
-        print('Failed to fetch data. Status Code: ${response.statusCode}');
+        print('Failed to fetch data. Status Code: ${response}');
       }
     } catch (error) {
       print('Error fetching data: $error');
@@ -100,34 +95,19 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _buildItemList({
     required List<Map<String, String>> itemList,
-    required List<String> imagePathList,
-    required bool isLarge,
+    required bool isCard,
   }) {
     return SizedBox(
-      height: isLarge ? 250 : 220,
+      height: isCard ? 250 : 220,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: itemList.length,
         itemBuilder: (context, index) {
           final item = itemList[index];
-          final imageIndex = index % imagePathList.length;
-          final imagePath = imagePathList[imageIndex];
-
-          if (imagePath == null) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: isLarge ? 170 : 150,
-                height: isLarge ? 200 : 180,
-                color: Colors.grey.shade300,
-                child: Center(child: Text('Image not found')),
-              ),
-            );
-          }
 
           return Padding(
             padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
-            child: isLarge
+            child: isCard
                 ? Largebutton(
                     DealName: item['name']!,
                     ItemDescription: item['description']!,
@@ -152,7 +132,7 @@ class _DashboardState extends State<Dashboard> {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [const Color(0xFF282a57).withOpacity(0.5), Colors.black],
+            colors: [const Color(0x00ffffff).withOpacity(0.02), Colors.black12],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -160,32 +140,44 @@ class _DashboardState extends State<Dashboard> {
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              stretch: true,
               pinned: true,
-              floating: false,
-              forceMaterialTransparency: true,
-              backgroundColor: Colors.black,
+              // forceMaterialTransparency: true,
+              backgroundColor: Colors.white,
               expandedHeight: 80,
               flexibleSpace: FlexibleSpaceBar(
-                titlePadding: EdgeInsets.all(0),
-                title: Container(
-                  alignment: Alignment.bottomLeft,
-                  padding: EdgeInsets.only(left: 10),
-                  child: Text(
-                    'Foodie',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontFamily: 'Crude',
-                      fontWeight: FontWeight.w200,
-                      color: Colors.blueGrey.shade700,
-                    ),
+                titlePadding: EdgeInsets.fromLTRB(10, 1, 1, 1),
+                title: Text(
+                  AppLocalizations.of(context)!.appTitle,
+                  style: TextStyle(
+                    fontSize: 45,
+                    fontFamily: 'Sequel',
+                    fontWeight: FontWeight.w200,
+                    color: Colors.black54,
                   ),
                 ),
               ),
               actions: <Widget>[
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 18, 10, 0),
-                  child: CustomDropDownMenu(),
+                  child: IconButton(
+                    splashColor: Colors.red,
+                    icon: Icon(
+                      Icons.login_outlined,
+                      size: 32,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => loginpage(),
+                        ),
+                      );
+                      Sharedpreference sp = Sharedpreference();
+                      sp.removeCache(key: 'token');
+                    },
+                  ),
+                  // child: CustomDropDownMenu(),
                 ),
               ],
               leadingWidth: 300,
@@ -194,82 +186,134 @@ class _DashboardState extends State<Dashboard> {
               delegate: SliverChildListDelegate(
                 [
                   const SizedBox(height: 30),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                    child: Text(
+                      AppLocalizations.of(context)!.categoryName_1,
+                      style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Sequel',
+                          color: Colors.black54),
+                    ),
+                  ),
                   _buildItemList(
                     itemList: _burgerList,
-                    imagePathList: largeCardImagePaths,
-                    isLarge: true,
+                    isCard: true,
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                     child: Text(
-                      'Your trusted picks',
+                      AppLocalizations.of(context)!.categoryName_2,
                       style: TextStyle(
-                          fontSize: 40,
+                          fontSize: 32,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Sequel',
-                          color: Colors.grey),
+                          color: Colors.black54),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                     child: _buildItemList(
                       itemList: _wrapList,
-                      imagePathList: smallCardImagePaths,
-                      isLarge: false,
+                      isCard: false,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                     child: Text(
-                      'Recommended',
+                      AppLocalizations.of(context)!.categoryName_3,
                       style: TextStyle(
-                          fontSize: 35,
+                          fontSize: 32,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Sequel',
-                          color: Colors.grey),
+                          color: Colors.black54),
                     ),
                   ),
                   _buildItemList(
                     itemList: _recommendedList,
-                    imagePathList: largeCardImagePaths,
-                    isLarge: true,
+                    isCard: false,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Text(
+                      AppLocalizations.of(context)!.categoryName_4,
+                      style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Sequel',
+                          color: Colors.black54),
+                    ),
+                  ),
+                  _buildItemList(
+                    itemList: _friezoneList,
+                    isCard: false,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Text(
+                      AppLocalizations.of(context)!.categoryName_5,
+                      style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Sequel',
+                          color: Colors.black54),
+                    ),
+                  ),
+                  _buildItemList(
+                    itemList: _friedChickenList,
+                    isCard: false,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Text(
+                      AppLocalizations.of(context)!.categoryName_6,
+                      style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Sequel',
+                          color: Colors.black54),
+                    ),
+                  ),
+                  _buildItemList(
+                    itemList: _sandwichesList,
+                    isCard: false,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Text(
+                      AppLocalizations.of(context)!.categoryName_7,
+                      style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Sequel',
+                          color: Colors.black54),
+                    ),
+                  ),
+                  _buildItemList(
+                    itemList: _specialitiesList,
+                    isCard: false,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Text(
+                      AppLocalizations.of(context)!.categoryName_8,
+                      style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Sequel',
+                          color: Colors.black54),
+                    ),
+                  ),
+                  _buildItemList(
+                    itemList: _plattersList,
+                    isCard: false,
                   ),
                 ],
               ),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTap,
-        currentIndex: current_index,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        selectedFontSize: 0,
-        unselectedFontSize: 0,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        elevation: 0,
-        items: const [
-          BottomNavigationBarItem(
-            label: 'Home',
-            icon: Icon(Icons.home),
-          ),
-          BottomNavigationBarItem(
-            label: 'Navigate',
-            icon: Icon(Icons.card_travel_sharp),
-          ),
-          BottomNavigationBarItem(
-            label: 'Like',
-            icon: Icon(Icons.heart_broken_rounded),
-          ),
-          BottomNavigationBarItem(
-            label: 'Profile',
-            icon: Icon(Icons.person),
-          ),
-        ],
       ),
     );
   }

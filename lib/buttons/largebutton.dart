@@ -60,37 +60,20 @@ class Largebutton extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 15),
-                  ElevatedButton(
+                  IconButton(
+                    highlightColor: Colors.orangeAccent,
+                    icon: Icon(
+                      Icons.shopping_cart,
+                      size: 32,
+                      color: Colors.grey,
+                    ),
                     onPressed: () {
-                      double ammount = double.parse(Price!);
+                      double price = double.parse(Price!);
                       if (DealName == null || DealName == "") return;
-                      _databaseService.addTask(DealName!, ammount);
+                      _databaseService.addItems(DealName!, price, 1);
                     },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: Colors.grey,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                    child: Text.rich(
-                      TextSpan(
-                        text: '        Add\n',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        children: <InlineSpan>[
-                          TextSpan(
-                            text: "Rs. $Price" ?? 'Price',
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
+                  Text("Rs. $Price" ?? 'Price')
                 ],
               ),
             ),

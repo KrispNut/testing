@@ -1,0 +1,58 @@
+{
+  "userName": "Zampa",
+  "@userName": {
+    "description": "User's name"
+  },
+  "userEmail": "zampa@gmail.com",
+  "@userEmail": {
+    "description": "User's email"
+  },
+  "language": "English",
+  "@language": {
+    "description": "The current language"
+  },
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile title"
+  },
+  "cart": "Cart",
+  "@cart": {
+    "description": "Shopping cart"
+  },
+  "appTitle": "Falafel",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "categoryName_1": "RECOMMENDED DEALS",
+  "@categoryName_1": {
+    "description": "Category name"
+  },
+  "categoryName_2": "YOUR TRUSTED PICKS",
+  "@categoryName_2": {
+    "description": "Category name"
+  },
+  "categoryName_3": "BURGERS",
+  "@categoryName_3": {
+    "description": "Category name"
+  },
+  "categoryName_4": "FRIEZONE",
+  "@categoryName_4": {
+    "description": "Category name"
+  },
+  "categoryName_5": "FRIED CHICKEN",
+  "@categoryName_5": {
+    "description": "Category name"
+  },
+  "categoryName_6": "SANDWICHES",
+  "@categoryName_6": {
+    "description": "Category name"
+  },
+  "categoryName_7": "SPECIALTIES",
+  "@categoryName_7": {
+    "description": "Category name"
+  },
+  "categoryName_8": "Platters",
+  "@categoryName_8": {
+    "description": "Category name"
+  }
+}
